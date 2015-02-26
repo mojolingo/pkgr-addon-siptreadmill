@@ -21,7 +21,7 @@ ${CLI} config:set DATABASE_URL="postgres://${APP_NAME}:$database_password@localh
 ${CLI} run rake db:setup db:seed || true
 
 # Configure third-party auth provider
-local auth_provider = $(wiz_get "siptreadmill/authentication/provider")
+auth_provider = $(wiz_get "siptreadmill/authentication/provider")
 ${CLI} config:set OMNIAUTH_TYPE=${auth_provider}
 case "${auth_provider}" in
     "github")
