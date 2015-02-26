@@ -1,0 +1,33 @@
+Template: siptreadmill/authentication/provider
+Type: select
+Choices: github, att
+Translations: Github, AT&T APIMatrix
+Default: sendmail
+Description: Which authentication provider do you want to use for _APP_NAME_?
+ Chose the authentication provider you have setup _APP_NAME_.
+
+Template: siptreadmill/authentication/key
+Type: string
+Description: Authentication provider API key
+ The API key provided to you by your authentication provider
+
+Template: siptreadmill/authentication/token
+Type: string
+Description: Authentication provider API token
+ The API token/secret provided to you by your authentication provider
+
+Template: siptreadmill/s3/bucket
+Type: string
+Default: siptreadmill
+Description: AWS S3 bucket
+ The S3 bucket name you want to use for storing files
+
+Template: siptreadmill/s3/key
+Type: string
+Description: AWS S3 key
+ The API token/secret provided to you by your authentication provider
+
+Template: siptreadmill/s3/token
+Type: string
+Description: AWS S3 authentication token
+ The token/secret provided to you by Amazon.

@@ -31,8 +31,30 @@ apt-get -y install sipp --force-yes
 echo "${APP_NAME} ALL=(ALL) NOPASSWD: /usr/bin/sipp" | tee /etc/sudoers.d/siptreadmill
 chmod 0440 /etc/sudoers.d/siptreadmill
 
+# Configure third-party auth provider
+local auth_provider = $(wiz_get "siptreadmill/authentication/provider")
+${CLI} config:set OMNIAUTH_TYPE=${auth_provider}
+case "${auth_provider}" in
+    "github")
+        ${CLI} config:set GITHUB_KEY=$(wiz_get "siptreadmill/authentication/key") GITHUB_SECRET=$(wiz_get "siptreadmill/authentication/token")
+        ;;
+    "att")
+        ${CLI} config:set APIMATRIX_KEY=$(wiz_get "siptreadmill/authentication/key") APIMATRIX_SECRET=$(wiz_get "siptreadmill/authentication/token")
+        ;;
+    "skip")
+        ;;
+    *)
+        echo "Unknown value for siptreadmill/authentication/provider"
+        ;;
+esac
+
+# Configure Amazon S3 credentials
+${CLI} config:set AWS_S3_BUCKET=$(wiz_get "siptreadmill/s3/bucket") AWS_ACCESS_KEY_ID=$(wiz_get "siptreadmill/s3/key") AWS_SECRET_ACCESS_KEY=$(wiz_get "siptreadmill/s3/token")
+
 # scale
 ${CLI} scale web=1 worker=1 || true
 
 # restart
 service ${APP_NAME} restart
+
+exit 0

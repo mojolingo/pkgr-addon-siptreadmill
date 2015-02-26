@@ -1,3 +1,63 @@
 #!/bin/bash
 
-exit 0
+set -e
+
+. "${INSTALLER_DIR}/wizard"
+
+input_start() {
+    wiz_put "siptreadmill/authentication/provider"
+    if wiz_ask ; then
+        STATE="auth_creds"
+    else
+        STATE="done"
+        echo "Authentication configuration canceled."
+        exit 1
+    fi
+}
+
+input_auth_creds() {
+    wiz_put "siptreadmill/authentication/key"
+    wiz_put "siptreadmill/authentication/token"
+
+    if wiz_ask ; then
+        STATE="s3"
+    else
+        STATE="start"
+    fi
+}
+
+input_s3() {
+    wiz_put "siptreadmill/s3/bucket"
+    wiz_put "siptreadmill/s3/key"
+    wiz_put "siptreadmill/s3/token"
+
+    if wiz_ask ; then
+        STATE="done"
+    else
+        STATE="start"
+    fi
+}
+
+state_machine() {
+    case "$1" in
+        "start")
+            input_start
+            ;;
+        "auth_creds")
+            input_auth_att
+            ;;
+        "s3")
+            input_s3
+            ;;
+        "done")
+            echo "DONE"
+            break
+            ;;
+        *)
+            echo "invalid state ${STATE}"
+            break
+            ;;
+    esac
+}
+
+wizard "start"
