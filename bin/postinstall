@@ -12,7 +12,7 @@ ${CLI} config:set COOKIE_SECRET="$cookie_secret"
 
 # Create database
 apt-get -y install postgresql
-sudo -u postgres createuser -D -A -P ${APP_NAME}
+sudo -u postgres createuser -D -A ${APP_NAME}
 database_password=$(${CLI} run rake -s secret | tail -1)
 sudo -u postgres psql -c "alter user ${APP_NAME} with password '$database_password';"
 sudo -u postgres createdb -O ${APP_NAME} ${APP_NAME}
