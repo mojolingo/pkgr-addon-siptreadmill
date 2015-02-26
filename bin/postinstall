@@ -11,7 +11,6 @@ cookie_secret=$(${CLI} config:get COOKIE_SECRET || ${CLI} run rake -s secret | t
 ${CLI} config:set COOKIE_SECRET="$cookie_secret"
 
 # Create database
-apt-get -y install postgresql
 sudo -u postgres createuser -D -A ${APP_NAME}
 database_password=$(${CLI} run rake -s secret | tail -1)
 sudo -u postgres psql -c "alter user ${APP_NAME} with password '$database_password';"
@@ -20,16 +19,6 @@ ${CLI} config:set DATABASE_URL="postgres://${APP_NAME}:$database_password@localh
 
 # prepare database
 ${CLI} run rake db:setup db:seed || true
-
-# Install redis
-apt-get -y install redis-server
-
-# Install SIPp & setup sudo
-echo "deb http://ppa.launchpad.net/taisph/sipp/ubuntu trusty main" | tee /etc/apt/sources.list.d/taisph-sipp.list
-apt-get -y update
-apt-get -y install sipp --force-yes
-echo "${APP_NAME} ALL=(ALL) NOPASSWD: /usr/bin/sipp" | tee /etc/sudoers.d/siptreadmill
-chmod 0440 /etc/sudoers.d/siptreadmill
 
 # Configure third-party auth provider
 local auth_provider = $(wiz_get "siptreadmill/authentication/provider")
