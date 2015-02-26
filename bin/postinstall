@@ -26,6 +26,7 @@ apt-get -y install redis-server
 
 # Install SIPp & setup sudo
 echo "deb http://ppa.launchpad.net/taisph/sipp/ubuntu trusty main" | tee /etc/apt/sources.list.d/taisph-sipp.list
+apt-get -y update
 apt-get -y install sipp --force-yes
 echo "${APP_NAME} ALL=(ALL) NOPASSWD: /usr/bin/sipp" | tee /etc/sudoers.d/siptreadmill
 chmod 0440 /etc/sudoers.d/siptreadmill
