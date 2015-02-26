@@ -22,7 +22,7 @@ ${CLI} config:set DATABASE_URL="postgres://${APP_NAME}:$database_password@localh
 ${CLI} run rake db:setup db:seed || true
 
 # Install redis
-apt-get -y install redis
+apt-get -y install redis-server
 
 # Install SIPp & setup sudo
 echo "deb http://ppa.launchpad.net/taisph/sipp/ubuntu trusty main" | tee /etc/apt/sources.list.d/taisph-sipp.list
