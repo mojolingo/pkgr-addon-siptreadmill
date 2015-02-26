@@ -6,34 +6,16 @@ set -e
 
 CLI="${APP_NAME}"
 
-rake_commands="db:migrate db:seed"
-
-# create attachments folder
-attachments_path=$(${CLI} config:get ATTACHMENTS_STORAGE_PATH || echo "/var/db/${APP_NAME}/files")
-mkdir -p "${attachments_path}"
-chown ${APP_USER}.${APP_GROUP} "${attachments_path}"
-${CLI} config:set ATTACHMENTS_STORAGE_PATH="${attachments_path}"
-
 # set web concurrency
-web_concurrency=$(${CLI} config:get WEB_CONCURRENCY || echo "2")
+web_concurrency=$(${CLI} config:get WEB_CONCURRENCY || echo "1")
 ${CLI} config:set WEB_CONCURRENCY=${web_concurrency}
 
-# set web timeout
-web_timeout=$(${CLI} config:get WEB_TIMEOUT || echo "15")
-${CLI} config:set WEB_TIMEOUT=${web_timeout}
+# set cookie secret token
+cookie_secret=$(${CLI} config:get COOKIE_SECRET || ${CLI} run rake -s secret | tail -1)
+${CLI} config:set COOKIE_SECRET="$cookie_secret"
 
-# set SECRET_TOKEN env variable
-secret_token=$(${CLI} config:get SECRET_TOKEN || ${CLI} run rake -s secret | tail -1)
-${CLI} config:set SECRET_TOKEN="$secret_token"
-
-# migrate
-${CLI} run rake ${rake_commands} || true
-
-# set various settings
-sys_api_key=$(${CLI} config:get SYS_API_KEY)
-web_protocol="$(${CLI} config:get SERVER_PROTOCOL)"
-web_hostname="$(${CLI} config:get SERVER_HOSTNAME)"
-${CLI} run rake setting:set[host_name=${web_hostname},protocol=${web_protocol},sys_api_enabled=1,sys_api_key=${sys_api_key}] 1>/dev/null
+# prepare database
+${CLI} run rake db:setup db:seed || true
 
 # scale
 ${CLI} scale web=1 worker=1 || true
