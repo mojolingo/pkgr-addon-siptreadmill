@@ -6,10 +6,6 @@ set -e
 
 CLI="${APP_NAME}"
 
-# set web concurrency
-web_concurrency=$(${CLI} config:get WEB_CONCURRENCY || echo "1")
-${CLI} config:set WEB_CONCURRENCY=${web_concurrency}
-
 # set cookie secret token
 cookie_secret=$(${CLI} config:get COOKIE_SECRET || ${CLI} run rake -s secret | tail -1)
 ${CLI} config:set COOKIE_SECRET="$cookie_secret"
