@@ -24,8 +24,10 @@ ${CLI} run rake db:setup db:seed || true
 # Install redis
 apt-get -y install redis
 
-# Setup sudo for running SIPp
-echo "${APP_NAME} ALL=(ALL) NOPASSWD: /usr/local/bin/sipp" | tee /etc/sudoers.d/siptreadmill
+# Install SIPp & setup sudo
+echo "deb http://ppa.launchpad.net/taisph/sipp/ubuntu trusty main" | tee /etc/apt/sources.list.d/taisph-sipp.list
+apt-get -y install sipp --force-yes
+echo "${APP_NAME} ALL=(ALL) NOPASSWD: /usr/bin/sipp" | tee /etc/sudoers.d/siptreadmill
 chmod 0440 /etc/sudoers.d/siptreadmill
 
 # scale
