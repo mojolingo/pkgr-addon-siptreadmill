@@ -44,7 +44,7 @@ state_machine() {
             input_start
             ;;
         "auth_creds")
-            input_auth_att
+            input_auth_creds
             ;;
         "s3")
             input_s3
