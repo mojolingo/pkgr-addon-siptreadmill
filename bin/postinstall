@@ -19,7 +19,7 @@ ${CLI} config:set DATABASE_URL="postgres://${APP_NAME}:$database_password@localh
 ${CLI} config:set DATABASE_PASSWORD="$database_password"
 
 # prepare database
-${CLI} run rake db:setup db:migrate db:seed || true
+${CLI} run rake db:migrate db:seed || true
 
 # Configure third-party auth provider
 auth_provider=$(wiz_get "siptreadmill/authentication/provider")
