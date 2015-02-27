@@ -26,10 +26,12 @@ auth_provider=$(wiz_get "siptreadmill/authentication/provider")
 ${CLI} config:set OMNIAUTH_TYPE=${auth_provider}
 case "${auth_provider}" in
     "github")
-        ${CLI} config:set GITHUB_KEY=$(wiz_get "siptreadmill/authentication/key") GITHUB_SECRET=$(wiz_get "siptreadmill/authentication/token")
+        ${CLI} config:set GITHUB_KEY=$(wiz_get "siptreadmill/authentication/key")
+        ${CLI} config:set GITHUB_SECRET=$(wiz_get "siptreadmill/authentication/token")
         ;;
     "att")
-        ${CLI} config:set APIMATRIX_KEY=$(wiz_get "siptreadmill/authentication/key") APIMATRIX_SECRET=$(wiz_get "siptreadmill/authentication/token")
+        ${CLI} config:set APIMATRIX_KEY=$(wiz_get "siptreadmill/authentication/key")
+        ${CLI} config:set APIMATRIX_SECRET=$(wiz_get "siptreadmill/authentication/token")
         ;;
     "skip")
         ;;
@@ -39,7 +41,9 @@ case "${auth_provider}" in
 esac
 
 # Configure Amazon S3 credentials
-${CLI} config:set AWS_S3_BUCKET=$(wiz_get "siptreadmill/s3/bucket") AWS_ACCESS_KEY_ID=$(wiz_get "siptreadmill/s3/key") AWS_SECRET_ACCESS_KEY=$(wiz_get "siptreadmill/s3/token")
+${CLI} config:set AWS_S3_BUCKET=$(wiz_get "siptreadmill/s3/bucket")
+${CLI} config:set AWS_ACCESS_KEY_ID=$(wiz_get "siptreadmill/s3/key")
+${CLI} config:set AWS_SECRET_ACCESS_KEY=$(wiz_get "siptreadmill/s3/token")
 
 # scale
 ${CLI} scale web=1 worker=1 || true
