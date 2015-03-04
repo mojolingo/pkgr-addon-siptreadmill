@@ -20,7 +20,31 @@ input_auth_creds() {
     wiz_put "siptreadmill/authentication/token"
 
     if wiz_ask ; then
-        STATE="s3"
+        STATE="storage"
+    else
+        STATE="start"
+    fi
+}
+
+input_storage() {
+    wiz_put "siptreadmill/storage/type"
+
+    if wiz_ask ;  then
+        if [ $(wiz_get "siptreadmill/storage/type") -eq "s3" ]; then
+            STATE="s3"
+        else
+            STATE="filepath"
+        fi
+    else
+        STATE="start"
+    fi
+}
+
+input_filepath() {
+    wiz_put "siptreadmill/storage/directory"
+
+    if wiz_ask ; then
+        STATE="done"
     else
         STATE="start"
     fi
@@ -45,6 +69,12 @@ state_machine() {
             ;;
         "auth_creds")
             input_auth_creds
+            ;;
+        "storage")
+            input_storage
+            ;;
+        "filepath")
+            input_filepath
             ;;
         "s3")
             input_s3
