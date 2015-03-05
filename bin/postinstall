@@ -41,9 +41,15 @@ case "${auth_provider}" in
 esac
 
 # Configure Amazon S3 credentials
-${CLI} config:set AWS_S3_BUCKET=$(wiz_get "siptreadmill/s3/bucket")
-${CLI} config:set AWS_ACCESS_KEY_ID=$(wiz_get "siptreadmill/s3/key")
-${CLI} config:set AWS_SECRET_ACCESS_KEY=$(wiz_get "siptreadmill/s3/token")
+if [$(wiz_get "siptreadmill/storage/type") -eq "s3"]; then
+    ${CLI} config:set STORAGE_TYPE=$(wiz_get "siptreadmill/storage/type")
+    ${CLI} config:set AWS_S3_BUCKET=$(wiz_get "siptreadmill/s3/bucket")
+    ${CLI} config:set AWS_ACCESS_KEY_ID=$(wiz_get "siptreadmill/s3/key")
+    ${CLI} config:set AWS_SECRET_ACCESS_KEY=$(wiz_get "siptreadmill/s3/token")
+else
+    ${CLI} config:set STORAGE_TYPE=$(wiz_get "siptreadmill/storage/type")
+    ${CLI} config:set FILE_PATH=$(wiz_get "siptreadmill/storage/directory")
+fi
 
 # scale
 ${CLI} scale web=1 worker=1 || true
