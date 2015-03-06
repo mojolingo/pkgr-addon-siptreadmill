@@ -7,7 +7,11 @@ set -e
 input_start() {
     wiz_put "siptreadmill/authentication/provider"
     if wiz_ask ; then
-        STATE="auth_creds"
+        if [ $(wiz_get "siptreadmill/authentication/provider") -eq "none" ]; then
+            STATE="storage"
+        else
+            STATE="auth_creds"
+        fi
     else
         STATE="done"
         echo "Authentication configuration canceled."
